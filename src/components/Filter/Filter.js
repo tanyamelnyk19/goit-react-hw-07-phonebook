@@ -1,6 +1,6 @@
 import s from './Filter.module.css';
 import { useSelector, useDispatch } from 'react-redux';
-import actions from '../../redux/contacts/actions';
+import * as actions from 'redux/contacts/actions';
 
 export default function Filter() {
   const filter = useSelector(state => state.filter);
@@ -21,13 +21,3 @@ export default function Filter() {
     </label>
   );
 }
-
-// const mapStateToProps = ({ filter }) => ({
-//   filter: filter,
-// });
-
-// const mapDispatchToProps = dispatch => ({
-//   handleFilter: (e) => dispatch(actions.filter(e.target.value)),
-// });
-
-// export default connect(mapStateToProps, mapDispatchToProps)(Filter);

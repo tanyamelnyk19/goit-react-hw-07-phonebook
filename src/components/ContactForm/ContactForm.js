@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import s from './ContactForm.module.css';
 import { useSelector, useDispatch } from 'react-redux';
-import actions from '../../redux/contacts/actions';
+import { addContact } from 'redux/contacts/operations';
 
 export default function ContactForm() {
   const [name, setName] = useState('');
@@ -22,7 +21,6 @@ export default function ContactForm() {
   const handleSubmit = e => {
     e.preventDefault();
     const newContact = {
-      id: uuidv4(),
       name: name,
       number: number,
     };
@@ -34,8 +32,7 @@ export default function ContactForm() {
     if (contactInPhonebook) {
       alert(`${newContact.name} is already in contacts.`);
     } else {
-      // onSubmit(newContact);
-      dispatch(actions.addContact(newContact));
+      dispatch(addContact(newContact));
     }
 
     resetForm();
@@ -82,13 +79,3 @@ export default function ContactForm() {
     </form>
   );
 }
-
-// const mapStateToProps = (state) => ({
-//   contacts: state.contacts,
-// });
-
-// const mapDispatchToProps = dispatch => ({
-//   onSubmit: (contact) => dispatch(actions.addContact(contact)),
-// });
-
-// export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);

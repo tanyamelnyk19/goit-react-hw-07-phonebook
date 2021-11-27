@@ -1,9 +1,18 @@
 import Contact from '../Contact';
 import s from './ContactList.module.css';
 import { useSelector, useDispatch } from 'react-redux';
-import actions from '../../redux/contacts/actions';
+import { fetchContacts, deleteContact } from 'redux/contacts/operations';
+import { useEffect } from 'react';
 
 export default function ContactList() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
+  const isLoadingContacts = useSelector(state => state.loading);
+
   const getFilteredName = (contacts, filter) => {
     const normalizedFilter = filter.toLowerCase();
     const filteredName = contacts.filter(contact =>
@@ -12,30 +21,23 @@ export default function ContactList() {
     return filteredName;
   };
 
-  const filteredName = useSelector(({ contacts, filter }) => getFilteredName(contacts, filter));
-  const dispatch = useDispatch();  
+  const filteredName = useSelector(({ contacts, filter }) => getFilteredName(contacts, filter));  
 
   return (
-    <ul>
-      {filteredName.map(({ id, name, number }) => (
-        <li className={s.contact} key={id}>
-          <Contact name={name} number={number} />
-          <button className={s.button} onClick={() => dispatch(actions.deleteContact(id))}>
-            Delete
-          </button>
-        </li>
-      ))}
-    </ul>
+    <>
+      {isLoadingContacts ? (<h1>Загружаем...</h1>)
+      : (
+        <ul>
+        {filteredName.map(({ id, name, number }) => (
+          <li className={s.contact} key={id}>
+            <Contact name={name} number={number} />
+            <button className={s.button} onClick={() => dispatch(deleteContact(id))}>
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+      )}      
+    </>
   );
 };
-
-// const mapStateToProps = ({ contacts, filter }) => ({
-//   filteredName: getFilteredName(contacts, filter),
-// });
-
-// const mapDispatchToProps = dispatch => ({
-//   deleteContact: id => dispatch(actions.deleteContact(id)),
-// })
-
-
-// export default connect(mapStateToProps, mapDispatchToProps)(ContactList);

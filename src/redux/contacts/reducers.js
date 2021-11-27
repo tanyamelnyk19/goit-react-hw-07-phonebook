@@ -1,40 +1,39 @@
 import { combineReducers } from 'redux';
-import contactsData from '../../contactsData/contacts.json';
-import { createReducer } from '@reduxjs/toolkit';
-import actions from './actions';
+import contactsData from 'contactsData/contacts.json';
+import { createReducer, createSlice } from '@reduxjs/toolkit';
+import { filter } from './actions';
+import { fetchContacts, addContact, deleteContact } from './operations';
 
-const initialState = contactsData;
+// const contactsSlice = createSlice({
+//     name: 'contacts',
+//     initialState: { contactsList: contactsData, contactsFilter: '', loading: false }, 
 
-const contactsList = createReducer(initialState, {
-    [actions.addContact]: (state, { payload }) => [...state, payload],
-    [actions.deleteContact]: (state, { payload }) => state.filter(contact => contact.id !== payload),
+// })
+
+const contactsList = createReducer(contactsData, {
+    [fetchContacts.fulfilled]: (_, { payload }) => payload,
+    [addContact.fulfilled]: (state, { payload }) => [...state, payload],
+    [deleteContact.fulfilled]: (state, { payload }) => state.filter(contact => contact.id !== payload),
 });
 
 const contactsFilter = createReducer('', {
-    [actions.filter]: (_, { payload }) => payload,
-})
+    [filter]: (_, { payload }) => payload,
+});
 
-// const contactsList = (state = initialState, { type, payload }) => {
-//     switch (type) {
-//         case "contact/add":
-//             return [...state, payload]; 
-//         case "contact/delete":
-//             return state.filter(contact => contact.id !== payload);
-//         default:
-//             return state;
-//     };
-// };
-
-// const contactsFilter = (state = '', { type, payload }) => {
-//     switch (type) {
-//         case "contact/filter":
-//             return payload;
-//         default:
-//             return state;
-//     };
-// };
+const loading = createReducer(false, {
+    [fetchContacts.pending]: () => true,
+    [fetchContacts.fulfilled]: () => false,
+    [fetchContacts.rejected]: () => false,
+    [addContact.pending]: () => true,
+    [addContact.fulfilled]: () => false,
+    [addContact.rejected]: () => false,
+    [deleteContact.pending]: () => true,
+    [deleteContact.fulfilled]: () => false,
+    [deleteContact.rejected]: () => false,
+});
 
 export default combineReducers({
     contacts: contactsList,
     filter: contactsFilter,
+    loading,
 })
