@@ -1,14 +1,8 @@
 import { combineReducers } from 'redux';
 import contactsData from 'contactsData/contacts.json';
-import { createReducer, createSlice } from '@reduxjs/toolkit';
+import { createReducer } from '@reduxjs/toolkit';
 import { filter } from './actions';
 import { fetchContacts, addContact, deleteContact } from './operations';
-
-// const contactsSlice = createSlice({
-//     name: 'contacts',
-//     initialState: { contactsList: contactsData, contactsFilter: '', loading: false }, 
-
-// })
 
 const contactsList = createReducer(contactsData, {
     [fetchContacts.fulfilled]: (_, { payload }) => payload,

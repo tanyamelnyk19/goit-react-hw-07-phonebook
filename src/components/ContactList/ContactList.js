@@ -1,8 +1,10 @@
 import Contact from '../Contact';
 import s from './ContactList.module.css';
+import MyLoader from '../MyLoader/MyLoader';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchContacts, deleteContact } from 'redux/contacts/operations';
 import { useEffect } from 'react';
+import { getIisLoadingContacts, getFilteredName } from 'redux/contacts/selectors';
 
 export default function ContactList() {
   const dispatch = useDispatch();
@@ -11,21 +13,13 @@ export default function ContactList() {
     dispatch(fetchContacts());
   }, [dispatch]);
 
-  const isLoadingContacts = useSelector(state => state.loading);
+  const isLoadingContacts = useSelector(getIisLoadingContacts);
 
-  const getFilteredName = (contacts, filter) => {
-    const normalizedFilter = filter.toLowerCase();
-    const filteredName = contacts.filter(contact =>
-      contact.name.toLowerCase().includes(normalizedFilter),
-    );
-    return filteredName;
-  };
-
-  const filteredName = useSelector(({ contacts, filter }) => getFilteredName(contacts, filter));  
+  const filteredName = useSelector(getFilteredName);
 
   return (
     <>
-      {isLoadingContacts ? (<h1>Загружаем...</h1>)
+      {isLoadingContacts ? (<MyLoader />)
       : (
         <ul>
         {filteredName.map(({ id, name, number }) => (

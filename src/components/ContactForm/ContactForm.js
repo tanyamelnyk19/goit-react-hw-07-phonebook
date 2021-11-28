@@ -2,12 +2,13 @@ import { useState } from 'react';
 import s from './ContactForm.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { addContact } from 'redux/contacts/operations';
+import { getContacts } from 'redux/contacts/selectors';
 
 export default function ContactForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   
-  const contacts = useSelector(state => state.contacts);
+  const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
 
   const handleNameChange = e => {
@@ -21,8 +22,8 @@ export default function ContactForm() {
   const handleSubmit = e => {
     e.preventDefault();
     const newContact = {
-      name: name,
-      number: number,
+      name,
+      number,
     };
 
     const contactInPhonebook = contacts.some(
